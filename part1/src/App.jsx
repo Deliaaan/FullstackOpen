@@ -1,25 +1,57 @@
-const Hello = (person) => {
+const App = () => {
+  const course = 'Half Stack application development'
+  const parts = [
+    {
+      title: "Fundamentals of React", exercises: 10
+    },
+    {
+      title: 'Using props to pass data', exercises: 7
+    },
+    {
+      title: 'State of a component', exercises: 14
+    }
+  ]
   return (
     <div>
-      <p>Hola mi nombre es: {person.name }</p>
-      <p>y mi edad es: {person.age }</p>
+      <Header course={course} />
+      <Content parts={parts} />
+      <Total exercises={parts[0].exercises + parts[1].exercises + parts[2].exercises} />
     </div>
   )
 }
 
-const App = () => {
-
-  const friends = [
-    {name:"Diego", age:"24"},
-    {name:"Luis", age:"25"},
-  ]
-
+const Header = (props) => {
   return (
     <div>
-      <h1>Saludos a tu putisisima madre</h1>
-      <p>{friends[0].name}{friends[0].age}</p>
-      <p>{friends[1].name}{friends[1].age}</p>
-    </div> 
+      <h1>{props.course}</h1>
+    </div>
+  )
+}
+
+const Content = ({ parts }) => {
+  return (
+    <div>
+      <Part title={parts[0].title} exercises={parts[0].exercises} />
+      <Part title={parts[1].title} exercises={parts[1].exercises} />
+      <Part title={parts[2].title} exercises={parts[2].exercises} />
+    </div>
+  )
+}
+
+const Part = (props) => {
+  return (
+    <div>
+      <p>Part: {props.title}</p>
+      <p>Exercises in this lesson: {props.exercises}</p>
+    </div>
+  )
+}
+
+const Total = (props) => {
+  return (
+    <div>
+      <p>Number of exercises: {props.exercises}</p>
+    </div>
   )
 }
 
