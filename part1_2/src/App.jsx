@@ -1,43 +1,51 @@
 import { useState } from 'react'
 
-
-const Statistics = (props) => {
-  if (props.good + props.neutral + props.bad === 0) {
-    return (
-      <div>
-        <h1>Statistics</h1>
-        <p>No feedback given</p>
-      </div>
-    )
-  }
-  return (
-    <div>
-    <h1>Statistics</h1>
-        <p>good {props.good}</p>
-        <p>neutral {props.neutral}</p>
-        <p>bad {props.bad}</p>
-        <p>All: {props.good + props.neutral + props.bad}</p>
-        <p>Average: {(props.good - props.bad)/ 3}</p>
-        <p>Positive: {props.good / (props.good + props.neutral + props.bad) * 100} %</p>
-  </div>
-  )
-}
-
-
 const App = () => {
-  // guarda los clics de cada botón en su propio estado
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
+  const anecdotes = [
+    'If it hurts, do it more often.',
+    'Adding manpower to a late software project makes it later!',
+    'The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    'Premature optimization is the root of all evil.',
+    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+    'The only way to go fast, is to go well.'
+  ]
 
 
+  const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(new Uint8Array(8))
+  const [mostValued, showMostValued] = useState()
+
+  const handleAnecdotes = () => {
+    setSelected(Math.floor(Math.random() * anecdotes.length))
+  }
+
+  const addVotes = () => {
+    const copy = [...votes]
+    copy[selected] += 1
+    setVotes(copy)
+    console.log(...copy)
+
+    const mostValuedIndex = votes.indexOf(Math.max(...votes))
+    showMostValued(anecdotes[mostValuedIndex])
+  }
+
+  
+  
   return (
     <div>
-      <h1>Give feedback</h1>
-      <button onClick={() => setGood(good + 1)}>good</button>
-      <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
-      <button onClick={() => setBad(bad + 1)}>bad</button>
-      <Statistics good={good} neutral={neutral} bad={bad} />
+      <h1>Anecdote of the day</h1>
+      {anecdotes[selected]}
+      <p> This anecdote have {votes[selected]} votes</p>
+      <div>
+        <button onClick={addVotes}> votes </button>
+        <button onClick={handleAnecdotes}>Next anecdote</button>
+      </div>
+      <div>
+        <h1>Most voted anecdote</h1>
+        {mostValued}
+      </div>
     </div>
   )
 }
