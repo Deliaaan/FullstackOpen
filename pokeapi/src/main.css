@@ -1,0 +1,9 @@
+return (
+  <div style={{ border: '2px solid red', padding: '10px', borderRadius: '8px' }}>
+    <img src={pokemonData.sprites.front_default} alt="pokemon image" />
+    <div>
+      <h2> {pokemonData.name} </h2>
+      <p>ID: {pokemonData.id} </p>
+    </div>
+  </div>
+)
