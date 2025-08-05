@@ -1,3 +1,5 @@
+import Courses from '../components/Courses'
+
 const App = () => {
 	const courses = [
 		{
@@ -39,55 +41,17 @@ const App = () => {
 					name: "Middlewares",
 					exercises: 7,
 					id: 2,
-				},
+				},  
 			],
 		},
 	];
 
-	// const Course = ({course}) => {
-
-	//   const totalExe = course.parts.reduce((sum, part) => sum += part.exercises, 0)
-
-	//   return (
-	//     <div>
-	//        <h1>{course.name}</h1>
-	//        {course.parts.map(part => (
-	//         <p key={part.id}>
-	//           {part.name} {part.exercises}
-	//         </p>
-	//        ))}
-
-	//        <p style={{fontWeight: 'bold'}}>Total exercises: {totalExe}</p>
-	//     </div>
-	// )}
-
-	const Courses = ({ courses }) => (
-			courses.map((course) => {
-				const totalExe = course.parts.reduce(
-					(sum, part) => sum + part.exercises,
-					0
-				);
-				return (
-					<div key={course.id}>
-						<h1>{course.name}</h1>
-						<ul>
-							{course.parts.map((part) => (
-								<li key={part.id}>
-									{part.name}: {part.exercises}
-								</li>
-							))}
-						</ul>
-						<p style={{ fontWeight: "bold" }}>Total exercises: {totalExe}</p>
-					</div>
-				);
-			})  
-	);
 
 	return (
-		<div>
-			<Courses courses={courses} />
-		</div>
-	);
+    <div>
+      <Courses courses={courses} />
+    </div>
+  );
 };
 
 export default App;
