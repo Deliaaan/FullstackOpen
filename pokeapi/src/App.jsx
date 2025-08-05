@@ -11,6 +11,7 @@ function App() {
       const response = await fetch(`${BASE_URL}${id}`);
       const data = await response.json()
 
+      console.log(data)
       setPokemonData((prevPokemonData) => {
         if (prevPokemonData.some(p => p.id === data.id)) return prevPokemonData
         return [...prevPokemonData, data]
