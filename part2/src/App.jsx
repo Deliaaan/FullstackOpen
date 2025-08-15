@@ -4,7 +4,7 @@ const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas' }
   ]) 
-  const [newName, setNewName] = useState('Name...')
+  const [newName, setNewName] = useState('Diego Nava')
 
   const addPerson = (event) => {
     event.preventDefault() // esto evita que se recarge 
@@ -13,9 +13,23 @@ const App = () => {
     const personObj = {
       name: newName
     }
+    
+    console.log(persons)
+    
+    if (persons.some(p => p.name === personObj.name)) {
+      alert(` "${personObj.name}" is already in the list`)
+    } else {
+      setPersons(persons.concat(personObj))
+      setNewName('')
+    }
 
-    setPersons(persons.concat(personObj))
-    setNewName('saved!!')
+    // const verifyPersonExists = ((prevPersons) => {
+    //   if (prevPersons.some(p => p.name === persons.name)) {
+    //     alert(` ${personObj} ya existe`)
+    //   } else {
+    //     setPersons(persons.concat(personObj))
+    //   }
+    // })
   }
 
   const handleNewPerson = (event) => {
