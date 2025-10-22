@@ -22,8 +22,14 @@ const update = (id, newObject) => {
   )
 }
 
+const handleDeletePerson = (id) => {
+  return axios.delete(`${baseURL}/${id}`)
+    .then(response => response.data)
+}
+
 export default {
   getAll,
   create,
-  update
+  update,
+  handleDeletePerson
 }

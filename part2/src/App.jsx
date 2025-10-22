@@ -1,15 +1,22 @@
 import { useState, useEffect} from 'react'
+import restPersons from './restPersons'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', phone: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', phone: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', phone: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', phone: '39-23-6423122', id: 4 }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newSearch, setNewSearch] = useState('')
+
+  useEffect(() => {
+    restPersons
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      })
+      .catch(error => {
+        console.error('Error fetching persons:', error)
+      })
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault() // esto evita que se recarge 
@@ -25,9 +32,16 @@ const App = () => {
     if (persons.some(p => p.name === personObj.name)) {
       alert(` "${personObj.name}" is already in the list`)
     } else {
-      setPersons(persons.concat(personObj))
-      setNewName('')
-      setNewPhone('')
+      restPersons
+        .create(personObj)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewPhone('')
+        })
+        .catch(error => {
+          console.error('Error creating person:', error)
+        })
     }
   }
 
@@ -43,14 +57,36 @@ const App = () => {
     setNewSearch(event.target.value)
   }
 
+  // Reemplazo: usar el método desde restPersons y luego actualizar el estado
+  const handleDeletePerson = (id) => {
+    const person = persons.find(p => p.id === id)
+    if (!person) return
+    if (!window.confirm(`Delete ${person.name}?`)) return
+
+    restPersons
+      .handleDeletePerson(id)
+      .then(() => {
+        setPersons(prev => prev.filter(p => p.id !== id))
+      })
+      .catch(error => {
+        console.error('Error deleting person:', error)
+        // opcional: igualmente actualizar UI si el recurso ya no existe en el servidor
+        setPersons(prev => prev.filter(p => p.id !== id))
+      })
+  }
+
   const ShowPersons = ({personToShow}) => {
     return (
       <div>
         {personToShow.map (person => 
           <p key={person.name}> 
-          {person.name} 
-          <br /> 
-          {person.phone}</p>
+          {person.name}
+          <br />
+          {person.phone}
+            <button onClick={() => handleDeletePerson(person.id)}>
+              Delete
+            </button>
+          </p>
         )}
       </div>
       
@@ -64,7 +100,6 @@ const App = () => {
       .toLowerCase()
       .includes(newSearch.toLowerCase()) || 
     person.phone
-      .toLowerCase()
       .includes(newSearch.toLowerCase())
   );
 });
