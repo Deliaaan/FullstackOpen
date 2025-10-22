@@ -15,11 +15,9 @@ const create = newObject => {
   )
 }
 
-const update = (id, newObject) => {
-  const request = axios.put(`${baseURL}/${id}`, newObject)
-  return request.then (
-    response => response.data
-  )
+const updatePhone = (id, newPhone) => {
+  const request = axios.put(`${baseURL}/${id}`, { phone: newPhone })
+  return request.then(response => response.data)
 }
 
 const handleDeletePerson = (id) => {
@@ -30,6 +28,6 @@ const handleDeletePerson = (id) => {
 export default {
   getAll,
   create,
-  update,
+  updatePhone,
   handleDeletePerson
 }

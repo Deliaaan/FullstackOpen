@@ -2,7 +2,7 @@ import { useState, useEffect} from 'react'
 import restPersons from './restPersons'
 
 const App = () => {
-  const [persons, setPersons] = useState([]) 
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newSearch, setNewSearch] = useState('')
@@ -30,6 +30,12 @@ const App = () => {
     console.log(persons)
     
     if (persons.some(p => p.name === personObj.name)) {
+      const persons = persons.find(p => p.id === id)
+      if (!window.confirm(`Would you like to update ${persons.name} phone number?`)) return
+      // if (!window.confirm(`Would you like to update ${persons.name} phone number?`)) return
+      // restPersons.updatePhone(personObj.id, personObj.phone)
+      
+    } else if ((persons.some(p => p.name === personObj.name))) {
       alert(` "${personObj.name}" is already in the list`)
     } else {
       restPersons
