@@ -6,6 +6,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newSearch, setNewSearch] = useState('')
+  const [ErrorMsg, setErrorMsg] = useState(null)
 
   useEffect(() => {
     restPersons
@@ -18,25 +19,39 @@ const App = () => {
       })
   }, [])
 
-  const addPerson = (event) => {
-    event.preventDefault() // esto evita que se recarge 
-    console.log("click", event.target)
+  const Notification = ({ message }) => {
+    if (!message) return null
+    return (
+      <div className='error'>
+        {message}
+      </div>
+    )
+  }
 
+  const addPerson = (event) => {
+    event.preventDefault()
     const personObj = {
       name: newName,
       phone: newPhone
     }
     
-    console.log(persons)
-    
     if (persons.some(p => p.name === personObj.name)) {
-      const persons = persons.find(p => p.id === id)
-      if (!window.confirm(`Would you like to update ${persons.name} phone number?`)) return
-      // if (!window.confirm(`Would you like to update ${persons.name} phone number?`)) return
-      // restPersons.updatePhone(personObj.id, personObj.phone)
-      
-    } else if ((persons.some(p => p.name === personObj.name))) {
-      alert(` "${personObj.name}" is already in the list`)
+      const person = persons.find(p => p.name === personObj.name)
+      if (!window.confirm(`Would you like to update ${person.name} phone number?`)) return
+      const updatedPerson = { ...person, phone: personObj.phone }
+      restPersons.update(person.id, updatedPerson)
+        .then(returnedPerson => {
+          setPersons(prev => prev.map(p => p.id === person.id ? returnedPerson : p))
+          setNewName('')
+          setNewPhone('')
+          setErrorMsg(`Updated ${person.name} phone number successfully`)
+          setTimeout(() => setErrorMsg(null), 3000)
+        })
+        .catch(error => {
+          console.error('Error updating person:', error)
+          setErrorMsg(`Failed to update ${person.name} phone number`)
+          setTimeout(() => setErrorMsg(null), 3000)
+        })
     } else {
       restPersons
         .create(personObj)
@@ -44,6 +59,9 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewPhone('')
+          console.error(`creation of : ${returnedPerson.name}`)
+          setErrorMsg(`creation of ${returnedPerson.name} was successful`)
+          setTimeout(() => setErrorMsg(null), 3000)
         })
         .catch(error => {
           console.error('Error creating person:', error)
@@ -106,7 +124,7 @@ const App = () => {
       .toLowerCase()
       .includes(newSearch.toLowerCase()) || 
     person.phone
-      .includes(newSearch.toLowerCase())
+      .includes(newSearch)
   );
 });
 
@@ -131,6 +149,10 @@ const App = () => {
         </div>
         <div>
           <button type="submit">add</button>
+        </div>
+        <br />
+        <div>
+          <Notification message={ErrorMsg} />
         </div>
       </form>
       <h2>Contact List</h2>
